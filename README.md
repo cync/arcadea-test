@@ -1,6 +1,6 @@
 # Docket
 
-🎥 **[Screen recording with explanations](https://drive.google.com/file/d/1YQC9z3Mj_OGbIq1D19JgVm6_r97wid44/view?usp=drive_link)**
+🎥 **[Screen recording with explanations](https://drive.google.com/file/d/1L8tN35CfRRWLX9daRVohR4E1n0onDuTA/view?usp=drive_link)**
 
 **Docket** is an internal, multi-tenant document-workflow tracker built for a single independent law firm (~12 people). It sits on top of the Google Drive a firm already uses — it never stores file content itself — and makes the state of every in-flight document visible to everyone who needs it, even when the attorney of record is unreachable.
 
