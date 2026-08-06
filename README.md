@@ -1,5 +1,7 @@
 # Docket
 
+🎥 **[Screen recording with explanations](https://drive.google.com/file/d/1YQC9z3Mj_OGbIq1D19JgVm6_r97wid44/view?usp=drive_link)**
+
 **Docket** is an internal, multi-tenant document-workflow tracker built for a single independent law firm (~12 people). It sits on top of the Google Drive a firm already uses — it never stores file content itself — and makes the state of every in-flight document visible to everyone who needs it, even when the attorney of record is unreachable.
 
 **Live demo (UI concept):** **[arcadea-test.lovable.app](https://arcadea-test.lovable.app/)**
@@ -48,7 +50,7 @@ Key architectural decisions — firm-scoped data isolation enforced by a strict 
 
 ## Project status
 
-Built end-to-end with the [BMad Method](https://github.com/bmad-code-org/BMAD-METHOD) — brainstorming → PRD → UX design → architecture → epics/stories → implementation, with every decision traceable back to a requirement. See [`_bmad-output/`](_bmad-output/) for the full paper trail: [PRD](_bmad-output/planning-artifacts/prds/), [architecture](_bmad-output/planning-artifacts/architecture/), [UX design](_bmad-output/planning-artifacts/ux-designs/), [epics & stories](_bmad-output/planning-artifacts/epics.md), and per-story implementation notes.
+Built end-to-end with the [BMad Method](https://github.com/bmad-code-org/BMAD-METHOD) — brainstorming → PRD → UX design → architecture → epics/stories → implementation, with every decision traceable back to a requirement. Start with the **[PRD](PRD.md)**, then see [`_bmad-output/`](_bmad-output/) for the full paper trail: [architecture](_bmad-output/planning-artifacts/architecture/), [UX design](_bmad-output/planning-artifacts/ux-designs/), [epics & stories](_bmad-output/planning-artifacts/epics.md), and per-story implementation notes.
 
 This is currently a backend/API-first implementation — domain logic, application services, and a fully tested API surface — with document intake, the workflow board, deadlines & aging, stale alerts, and delegated approval implemented and under test. Client access and scanned-document logging are planned next; a dedicated UI layer has not yet been built against this API (see the live demo above for the intended UI direction).
 
