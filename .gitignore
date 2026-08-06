@@ -1,0 +1,11 @@
+node_modules/
+.next/
+generated/
+.env
+.env.local
+*.log
+*.tsbuildinfo
+
+# Agent tooling (not part of the shipped project)
+.claude/
+_bmad/

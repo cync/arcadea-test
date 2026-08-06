@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Minimal — Firm provisioning itself is out of scope for v1 (no UI/API creates
+// a Firm; see ARCHITECTURE-SPINE.md Deferred: "Firm-provisioning process/tool").
+// This model exists only because Matter.firmId needs an FK target and every
+// entity going forward is Firm-scoped per AD-1.
+model Firm {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+
+  matters         Matter[]
+  driveConnection DriveConnection?
+  users           User[]
+  auditEntries    AuditEntry[]
+
+  @@map("firms")
+}
+
+// Firm-member directory — NOT an auth system (no password, no login). Exists
+// so Document.attorneyOfRecordId and Matter.primaryAttorneyId have a real
+// entity to point to. See Story 1.1's still-open "no real authentication" gap.
+model User {
+  id     String @id @default(uuid())
+  firmId String
+  firm   Firm   @relation(fields: [firmId], references: [id])
+  name   String
+  email  String
+  role   String
+
+  mattersAsPrimaryAttorney Matter[]     @relation("MatterPrimaryAttorney")
+  documentsOwned           Document[]   @relation("DocumentAttorneyOfRecord")
+  documentsReviewed        Document[]   @relation("DocumentReviewedBy")
+  auditEntriesActed        AuditEntry[]
+
+  @@unique([firmId, email])
+  @@index([firmId])
+  @@map("users")
+}
+
+model Matter {
+  id                String   @id @default(uuid())
+  firmId            String
+  firm              Firm     @relation(fields: [firmId], references: [id])
+  name              String
+  client            String
+  driveFolderId     String?
+  primaryAttorneyId String?
+  primaryAttorney   User?    @relation("MatterPrimaryAttorney", fields: [primaryAttorneyId], references: [id])
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  documents    Document[]
+  auditEntries AuditEntry[]
+
+  @@index([firmId])
+  @@map("matters")
+}
+
+enum DocumentStatus {
+  DRAFT
+  REVIEWED
+  NEEDS_REVISION
+  WAITING_ON_CLIENT_SIGNATURE
+  FILED_SENT
+}
+
+// Firm-scoped. attorneyOfRecordId is set once at creation by
+// DocumentDetection and has no update path in this story (AC #2) — Epic 2/4
+// own transitioning it later, per AD-3/AD-6.
+model Document {
+  id                 String         @id @default(uuid())
+  firmId             String
+  matterId           String
+  matter             Matter         @relation(fields: [matterId], references: [id])
+  driveFileId        String
+  name               String
+  status             DocumentStatus @default(DRAFT)
+  attorneyOfRecordId String
+  attorneyOfRecord   User           @relation("DocumentAttorneyOfRecord", fields: [attorneyOfRecordId], references: [id])
+  reviewedByUserId   String?
+  reviewedBy         User?          @relation("DocumentReviewedBy", fields: [reviewedByUserId], references: [id])
+  deadline           DateTime?
+  staleAlertSentAt   DateTime?
+  statusChangedAt    DateTime       @default(now())
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  auditEntries       AuditEntry[]
+
+  @@unique([matterId, driveFileId])
+  @@index([firmId])
+  @@map("documents")
+}
+
+// Firm-scoped (AD-1). Insert-only audit trail (AD-6) — no update/delete path
+// exists for this model, ever. First written by Story 1.5 (reassignment);
+// Stories 2.3/4.2 add further `action` values without a schema change.
+model AuditEntry {
+  id         String   @id @default(uuid())
+  firmId     String
+  firm       Firm     @relation(fields: [firmId], references: [id])
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id])
+  matterId   String
+  matter     Matter   @relation(fields: [matterId], references: [id])
+  actorId    String
+  actor      User     @relation(fields: [actorId], references: [id])
+  action     String
+  reason     String?
+  timestamp  DateTime @default(now())
+
+  @@index([firmId])
+  @@index([documentId])
+  @@map("audit_entries")
+}
+
+// Firm-scoped (AD-1) — one connection per Firm. Tokens are ciphertext
+// (adapters/crypto/tokenCipher.ts); never store or log them raw (AD-8).
+model DriveConnection {
+  id                    String    @id @default(uuid())
+  firmId                String    @unique
+  firm                  Firm      @relation(fields: [firmId], references: [id])
+  accessTokenEncrypted  String
+  refreshTokenEncrypted String
+  expiresAt             DateTime
+  revokedAt             DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("drive_connections")
+}
