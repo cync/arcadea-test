@@ -48,6 +48,17 @@ Key architectural decisions — firm-scoped data isolation enforced by a strict 
 - **Resend** for transactional stale-alert email
 - **Vitest**, with integration tests run against a real embedded Postgres-compatible engine ([PGlite](https://github.com/electric-sql/pglite)) rather than mocks
 
+## Metrics I use to evaluate BMAD — from real-world experience
+
+BMad Method (brainstorm → PRD → UX → architecture → epics/stories → implementation, with an adversarial review pass before code review) isn't free — it's ceremony, and ceremony has a cost curve. These are the metrics I actually track to know whether it's paying for itself on a given project, rather than taking the process on faith:
+
+- **Requirement → code traceability rate** — % of shipped features where you can walk PRD FR → story → commit without a gap. This repo's `_bmad-output/` is that trail, made inspectable.
+- **Pre-ship defect catch rate from review steps** — how many cross-story/integration bugs the adversarial architecture review or code-review pass catches *before* they'd have shipped. This is BMAD's clearest ROI number, and it's countable — see the [architecture review](_bmad-output/planning-artifacts/architecture/architecture-Docket-2026-08-05/reviews/) for a concrete example of a cross-story data-model conflict caught before implementation.
+- **Idea → validated-PRD cycle time** — whether structured elicitation actually speeds up or slows down getting to a build-ready spec.
+- **Assumption hit rate** — of tagged `[ASSUMPTION]`s (see the PRD's own Assumptions Index), what % get validated vs. overturned post-launch. Tells you if the team's guessing is well-calibrated or if the tagging is theater.
+- **Context-transfer time** — how long it takes a new engineer or PM to get productive on an existing feature. Should drop if the artifact trail is real, not just decorative.
+- **Documentation staleness** — % of docs that drift from shipped behavior after 90 days. The honest failure mode to watch for, since artifacts like these only stay valuable if they're kept in sync.
+
 ## Project status
 
 Built end-to-end with the [BMad Method](https://github.com/bmad-code-org/BMAD-METHOD) — brainstorming → PRD → UX design → architecture → epics/stories → implementation, with every decision traceable back to a requirement. Start with the **[PRD](PRD.md)** and the **[UX design](ux-design/)** (visual identity + experience spine), then see [`_bmad-output/`](_bmad-output/) for the full paper trail: [architecture](_bmad-output/planning-artifacts/architecture/), [epics & stories](_bmad-output/planning-artifacts/epics.md), and per-story implementation notes.
