@@ -50,7 +50,7 @@ Key architectural decisions — firm-scoped data isolation enforced by a strict 
 
 ## Project status
 
-Built end-to-end with the [BMad Method](https://github.com/bmad-code-org/BMAD-METHOD) — brainstorming → PRD → UX design → architecture → epics/stories → implementation, with every decision traceable back to a requirement. Start with the **[PRD](PRD.md)**, then see [`_bmad-output/`](_bmad-output/) for the full paper trail: [architecture](_bmad-output/planning-artifacts/architecture/), [UX design](_bmad-output/planning-artifacts/ux-designs/), [epics & stories](_bmad-output/planning-artifacts/epics.md), and per-story implementation notes.
+Built end-to-end with the [BMad Method](https://github.com/bmad-code-org/BMAD-METHOD) — brainstorming → PRD → UX design → architecture → epics/stories → implementation, with every decision traceable back to a requirement. Start with the **[PRD](PRD.md)** and the **[UX design](ux-design/)** (visual identity + experience spine), then see [`_bmad-output/`](_bmad-output/) for the full paper trail: [architecture](_bmad-output/planning-artifacts/architecture/), [epics & stories](_bmad-output/planning-artifacts/epics.md), and per-story implementation notes.
 
 This is currently a backend/API-first implementation — domain logic, application services, and a fully tested API surface — with document intake, the workflow board, deadlines & aging, stale alerts, and delegated approval implemented and under test. Client access and scanned-document logging are planned next; a dedicated UI layer has not yet been built against this API (see the live demo above for the intended UI direction).
 
